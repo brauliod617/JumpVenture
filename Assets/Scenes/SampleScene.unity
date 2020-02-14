@@ -33308,13 +33308,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1945971701}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.871, y: -0.426, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1945971704
 Rigidbody2D:
   serializedVersion: 4
@@ -33359,8 +33359,8 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.38, y: -0.64}
-      - {x: 0.38, y: -0.45999998}
+    - - {x: 0.35384655, y: -0.5989}
+      - {x: 0.365057, y: -0.46000004}
       - {x: 0.28, y: -0.22}
       - {x: 0.32, y: 0.099999994}
       - {x: 0.12, y: 0.7}
@@ -33370,12 +33370,12 @@ PolygonCollider2D:
       - {x: -0.53999996, y: -0.02}
       - {x: -0.53999996, y: -0.32}
       - {x: -0.44, y: -0.5}
-      - {x: -0.5, y: -0.62}
-      - {x: -0.44, y: -0.64}
-      - {x: -0.19999999, y: -0.64}
-      - {x: -0.17999999, y: -0.62}
+      - {x: -0.48878908, y: -0.59758186}
+      - {x: -0.4399991, y: -0.6138459}
+      - {x: -0.20747185, y: -0.60637295}
+      - {x: -0.16878843, y: -0.6050548}
       - {x: -0.04, y: -0.24}
-      - {x: 0.08, y: -0.64}
+      - {x: 0.07626295, y: -0.60263664}
 --- !u!114 &1945971706
 MonoBehaviour:
   m_ObjectHideFlags: 0
