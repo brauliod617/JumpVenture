@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Rigidbody2D rb2d;
-    public float test;
+    public float speed;
 
     private Vector2 idlePosition;
     private string previousAnimation;
@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         handleMovement();
-
 	}
 
     void handleMovement() {
@@ -47,8 +46,7 @@ public class PlayerController : MonoBehaviour {
             return;
 
         rb2d.AddForce(movement);
-        rb2d.velocity = movement * 5;
-        test = movement.x;
+        rb2d.velocity = movement * speed;
         updateAnimator(moveHorizontal, movement);
     }
 
