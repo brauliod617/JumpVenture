@@ -17,9 +17,15 @@ public class CameraFollow : MonoBehaviour {
     //we result in jittery behavior because the target's transform and will be
     //changed in the same fram we try to reference it
     //LateUpdate, same as update but run right after update
-    private void LateUpdate()
+    private void FixedUpdate()
     {
-        transform.position = target.position + offset;
+        Vector3 desiredPosition = target.position + offset;
+        //Lerp = linear interpelation, process of smoothing going from point a to point b
+        //Takes 3 args, curPos, desPos, and t where t is float and 0 .. 1. 
+        //t represents how much closer we get to our desired pos
+        //1 being all the way there, 0 being not moving at all
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.position = smoothedPosition;
 
     }
 }
