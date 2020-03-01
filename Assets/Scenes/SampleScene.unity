@@ -33238,8 +33238,8 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!68 &1207199408
-EdgeCollider2D:
+--- !u!19719996 &1207199408
+TilemapCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -33251,10 +33251,6 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -8.642935, y: -0.6395463}
-  - {x: 9.921761, y: -0.6357537}
 --- !u!1 &1945971701
 GameObject:
   m_ObjectHideFlags: 0
@@ -33265,9 +33261,9 @@ GameObject:
   - component: {fileID: 1945971703}
   - component: {fileID: 1945971702}
   - component: {fileID: 1945971704}
-  - component: {fileID: 1945971705}
   - component: {fileID: 1945971706}
   - component: {fileID: 1945971707}
+  - component: {fileID: 1945971705}
   m_Layer: 5
   m_Name: FOX_Iddle_5
   m_TagString: Untagged
@@ -33354,8 +33350,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!60 &1945971705
-PolygonCollider2D:
+--- !u!68 &1945971705
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -33367,34 +33363,18 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_EdgeRadius: 0
   m_Points:
-    m_Paths:
-    - - {x: 0.35384655, y: -0.5989}
-      - {x: 0.365057, y: -0.46000004}
-      - {x: 0.28, y: -0.22}
-      - {x: 0.32, y: 0.099999994}
-      - {x: 0.12, y: 0.7}
-      - {x: -0.22, y: 0.7}
-      - {x: -0.29999998, y: 0.65999997}
-      - {x: -0.44, y: -0.04}
-      - {x: -0.53999996, y: -0.02}
-      - {x: -0.53999996, y: -0.32}
-      - {x: -0.44, y: -0.5}
-      - {x: -0.48878908, y: -0.59758186}
-      - {x: -0.4399991, y: -0.6138459}
-      - {x: -0.20747185, y: -0.60637295}
-      - {x: -0.16878843, y: -0.6050548}
-      - {x: -0.04, y: -0.24}
-      - {x: 0.07626295, y: -0.60263664}
+  - {x: -0.25467634, y: 0.69839567}
+  - {x: -0.25449753, y: 0.69861025}
+  - {x: 0.007739067, y: 0.71121466}
+  - {x: 0.25923014, y: 0.7072711}
+  - {x: 0.262897, y: -0.10081902}
+  - {x: 0.5085397, y: -0.61094236}
+  - {x: -0.48846245, y: -0.6125767}
+  - {x: -0.5578637, y: -0.15370205}
+  - {x: -0.25471926, y: 0.6984705}
+  - {x: -0.25441647, y: 0.69826114}
 --- !u!114 &1945971706
 MonoBehaviour:
   m_ObjectHideFlags: 0

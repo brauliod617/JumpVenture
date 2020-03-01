@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
@@ -40,11 +38,13 @@ public class PlayerController : MonoBehaviour {
     void handleMovement() {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = 0.0f;
+        
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
 
         if (rb2d == null)
             return;
 
+        //move player character
         rb2d.AddForce(movement);
         rb2d.velocity = movement * speed;
         updateAnimator(moveHorizontal, movement);
@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
+        //turn of the previous animation if there was one and the movement is 
+        //now idle position
         if(previousAnimation != null && movement == idlePosition) {
             animator.SetBool(previousAnimation, false);
             return;
@@ -65,18 +67,24 @@ public class PlayerController : MonoBehaviour {
             animator.SetBool(WALKING, true);
             previousAnimation = WALKING;
 
-            //if sprite was flipped, unflip it
-            if (spriteRenderer.flipX == true)
-                spriteRenderer.flipX = false;
+            //if player if facing the left
+            if(Mathf.Approximately(transform.eulerAngles.y, 180.0f)) {
+                //change the rotation.y to 0, face forward
+                transform.eulerAngles = new Vector3(0, 0, 0);
+            }
 
-        }else if(moveHorizontal < 0) {
+        }// else if player is moving backward
+        else if(moveHorizontal < 0) {
             animator.SetBool(WALKING, true);
             previousAnimation = WALKING;
 
-            //if sprite was flipped, unflip it
-            if (spriteRenderer.flipX == false)
-                spriteRenderer.flipX = true;
-        }else {
+            //if player is facing the right
+            if (Mathf.Approximately(transform.eulerAngles.y, 00.0f)){
+                //change the rotation.y to 180, face backwords                
+                transform.eulerAngles = new Vector3(0f, 180f, 0f);
+            }
+        }
+        else { //if player is not moving
             animator.SetBool(WALKING, false);
             previousAnimation = WALKING;
         }
