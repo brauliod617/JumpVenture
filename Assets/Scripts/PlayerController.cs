@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
     private Animator animator;
     private Rigidbody2D rb2d;
     public float speed;
+    public float runSpeed;
 
     private Vector2 idlePosition;
     private string previousAnimation;
@@ -37,6 +38,9 @@ public class PlayerController : MonoBehaviour {
 
     void handleMovement() {
         float moveHorizontal = Input.GetAxis("Horizontal");
+        bool run = Input.GetKey(KeyCode.LeftShift);
+        Debug.Log(run);
+
         float moveVertical = 0.0f;
         
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
@@ -46,11 +50,15 @@ public class PlayerController : MonoBehaviour {
 
         //move player character
         rb2d.AddForce(movement);
-        rb2d.velocity = movement * speed;
-        updateAnimator(moveHorizontal, movement);
+        if (run) {
+            rb2d.velocity = movement * speed * runSpeed;
+        }else {
+            rb2d.velocity = movement * speed;
+        }
+        updateAnimator(moveHorizontal, movement, run);
     }
 
-    void updateAnimator(float moveHorizontal, Vector2 movement) {
+    void updateAnimator(float moveHorizontal, Vector2 movement, bool run) {
         if(animator == null) {
             print("Error in PlayerController.updateAnimator\n");
             return;
@@ -63,9 +71,16 @@ public class PlayerController : MonoBehaviour {
             return;
         }
         //if player is moving forward
-        if(moveHorizontal > 0) { 
-            animator.SetBool(WALKING, true);
-            previousAnimation = WALKING;
+        if(moveHorizontal > 0){
+            if (run){
+                animator.SetBool(RUNNING, true);
+                previousAnimation = RUNNING;
+            }
+            else {
+                animator.SetBool(previousAnimation, false);
+                animator.SetBool(WALKING, true);
+                previousAnimation = WALKING;
+            }
 
             //if player if facing the left
             if(Mathf.Approximately(transform.eulerAngles.y, 180.0f)) {
@@ -75,8 +90,17 @@ public class PlayerController : MonoBehaviour {
 
         }// else if player is moving backward
         else if(moveHorizontal < 0) {
-            animator.SetBool(WALKING, true);
-            previousAnimation = WALKING;
+            if (run)
+            {
+                animator.SetBool(RUNNING, true);
+                previousAnimation = RUNNING;
+            }
+            else
+            {
+                animator.SetBool(previousAnimation, false);
+                animator.SetBool(WALKING, true);
+                previousAnimation = WALKING;
+            }
 
             //if player is facing the right
             if (Mathf.Approximately(transform.eulerAngles.y, 00.0f)){
