@@ -14,17 +14,27 @@ public class PlayerController : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Rigidbody2D rb2d;
+    private EdgeCollider2D edgeCollider2D;
+    private Time currentTime;
+    public float jumpWaitTimePub;
+    private float jumpWaitTime;
     public float speed;
     public float runSpeed;
+    public float jumpSpeed;
+
+    [SerializeField] private LayerMask platofrmLayerMask; 
 
     private Vector2 idlePosition;
     private string previousAnimation;
-
+    private bool timeStarted;
 
 	void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        edgeCollider2D = GetComponent<EdgeCollider2D>();
+        timeStarted = false;
+        jumpWaitTime = jumpWaitTimePub;
 
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -33,13 +43,36 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
         handleMovement();
+        handlePossibleJump();
 	}
+
+    void handlePossibleJump()
+    {
+        bool jump = Input.GetKeyDown(KeyCode.Space);
+
+        if (jump && isGrounded())
+        {
+            Debug.Log("Jumping");
+            rb2d.velocity = Vector2.up * jumpSpeed;
+            timeStarted = true;
+        }
+
+    }
+
+    private bool isGrounded() {
+        RaycastHit2D raycastHit2D = Physics2D.BoxCast(edgeCollider2D.bounds.center, edgeCollider2D.bounds.size, 0f,
+        Vector2.down, .05f, platofrmLayerMask);
+        //Debug.Log(raycastHit2D.collider); 
+        return raycastHit2D.collider != null;
+    }
+
 
     void handleMovement() {
         float moveHorizontal = Input.GetAxis("Horizontal");
         bool run = Input.GetKey(KeyCode.LeftShift);
-        Debug.Log(run);
+
 
         float moveVertical = 0.0f;
         
