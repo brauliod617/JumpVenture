@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
     private const string WALKING = "Walking";
     private const string RUNNING = "Running";
     private const string CROUCHING = "Crouching";
+    private const string JUMPING = "Jumping";
     bool run;
     public bool secondJump;
     private SpriteRenderer spriteRenderer;
@@ -19,12 +20,13 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed;
     public float jumpVelocity;
     public float fallMultiplier = 2.5f;
-    public float lowJumpMultiplier = 2f;
+    Vector2 movement;
+    float moveHorizontal;
 
     [SerializeField] private LayerMask platofrmLayerMask;
 
     private Vector2 idlePosition;
-    private string previousAnimation;
+    public string previousAnimation;
 
 
 	void Start () {
@@ -48,12 +50,12 @@ public class PlayerController : MonoBehaviour {
     }
     /***************************** MOVE & JUMP *******************************/
     void handleMovement() {
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        moveHorizontal = Input.GetAxis("Horizontal");
 
 
         float moveVertical = 0.0f;
         
-        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+        movement = new Vector2(moveHorizontal, moveVertical);
 
         if (rb2d == null)
             return;
@@ -68,7 +70,7 @@ public class PlayerController : MonoBehaviour {
         }else {
             rb2d.AddForce(Vector2.right * movement * speed);
         }
-        updateAnimator(moveHorizontal, movement, run);
+        UpdateAnimator(run);
     }
 
     private void HandleJumping()
@@ -76,17 +78,18 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButtonDown("Jump") && (IsGrounded() || secondJump ))
         {
             Debug.Log("JUMPING");
-
             if (run)
                 rb2d.AddForce(Vector2.up * (jumpVelocity + 50), ForceMode2D.Force);
             else
                 rb2d.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Force);
             secondJump = !secondJump;
+            UpdateAnimator();
         }
         if (rb2d.velocity.y < 0)
         {
             rb2d.AddForce(Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
         }
+
 
     }
 
@@ -99,38 +102,62 @@ public class PlayerController : MonoBehaviour {
 
 
     /************************************ ANIMATOR ****************************/
-    void updateAnimator(float moveHorizontal, Vector2 movement, bool run) {
+    void UpdateAnimator(bool run = false) {
         if(animator == null) {
             print("Error in PlayerController.updateAnimator\n");
             return;
         }
 
+        //if player is in the air
+        if (!IsGrounded())
+        {
+            animator.SetBool(previousAnimation, false);
+            animator.SetBool(JUMPING, true);
+            previousAnimation = JUMPING;
+            return;
+        }
+
+        //TODO: find a better way to do this, for some reason jumping stays true
+        //in some cases, this is a hack to fix it
+
+        if (IsGrounded() && animator.GetBool(JUMPING)) {
+            animator.SetBool(JUMPING, false);
+        }
+
         //turn of the previous animation if there was one and the movement is 
         //now idle position
-        if(previousAnimation != null && movement == idlePosition) {
+        if (previousAnimation != null && movement == idlePosition) {
             animator.SetBool(previousAnimation, false);
             return;
         }
+
+
         //if player is moving forward
-        if(moveHorizontal > 0){
-            if (run){
+        if (moveHorizontal > 0)
+        {
+            if (run)
+            {
+                animator.SetBool(previousAnimation, false);
                 animator.SetBool(RUNNING, true);
                 previousAnimation = RUNNING;
             }
-            else {
+            else
+            {
                 animator.SetBool(previousAnimation, false);
                 animator.SetBool(WALKING, true);
                 previousAnimation = WALKING;
             }
 
             //if player if facing the left
-            if(Mathf.Approximately(transform.eulerAngles.y, 180.0f)) {
+            if (Mathf.Approximately(transform.eulerAngles.y, 180.0f))
+            {
                 //change the rotation.y to 0, face forward
                 transform.eulerAngles = new Vector3(0, 0, 0);
             }
 
         }// else if player is moving backward
-        else if(moveHorizontal < 0) {
+        else if (moveHorizontal < 0)
+        {
             if (run)
             {
                 animator.SetBool(RUNNING, true);
@@ -144,12 +171,14 @@ public class PlayerController : MonoBehaviour {
             }
 
             //if player is facing the right
-            if (Mathf.Approximately(transform.eulerAngles.y, 00.0f)){
+            if (Mathf.Approximately(transform.eulerAngles.y, 00.0f))
+            {
                 //change the rotation.y to 180, face backwords                
                 transform.eulerAngles = new Vector3(0f, 180f, 0f);
             }
         }
-        else { //if player is not moving
+        else
+        { //if player is not moving
             animator.SetBool(WALKING, false);
             previousAnimation = WALKING;
         }
