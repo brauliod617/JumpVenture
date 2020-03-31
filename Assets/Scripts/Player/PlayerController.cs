@@ -7,7 +7,8 @@ public class PlayerController : MonoBehaviour {
     private const string WALKING = "Walking";
     private const string RUNNING = "Running";
     private const string CROUCHING = "Crouching";
-
+    bool run;
+    public bool secondJump;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     Rigidbody2D rb2d;
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour {
     private Time currentTime;
     public float speed;
     public float runSpeed;
+    public float maxSpeed;
     public float jumpVelocity;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviour {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         edgeCollider2D = GetComponent<EdgeCollider2D>();
+        secondJump = false;
+      
 
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -38,13 +42,14 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        run = Input.GetKey(KeyCode.LeftShift);
         handleMovement();
         HandleJumping();
     }
     /***************************** MOVE & JUMP *******************************/
     void handleMovement() {
         float moveHorizontal = Input.GetAxis("Horizontal");
-        bool run = Input.GetKey(KeyCode.LeftShift);
+
 
         float moveVertical = 0.0f;
         
@@ -53,6 +58,9 @@ public class PlayerController : MonoBehaviour {
         if (rb2d == null)
             return;
 
+        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed) {
+            return;
+        }
         //move player character
         rb2d.AddForce(movement);
         if (run) {
@@ -65,16 +73,21 @@ public class PlayerController : MonoBehaviour {
 
     private void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && (IsGrounded() || secondJump ))
         {
-            rb2d.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Force);
+            Debug.Log("JUMPING");
+
+            if (run)
+                rb2d.AddForce(Vector2.up * (jumpVelocity + 50), ForceMode2D.Force);
+            else
+                rb2d.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Force);
+            secondJump = !secondJump;
         }
-        Debug.Log(rb2d.velocity.y);
         if (rb2d.velocity.y < 0)
         {
-            Debug.Log("Here" + fallMultiplier);
             rb2d.AddForce(Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
         }
+
     }
 
     private bool IsGrounded()
