@@ -8,25 +8,31 @@ public class PlayerController : MonoBehaviour {
     private const string RUNNING = "Running";
     private const string CROUCHING = "Crouching";
     private const string JUMPING = "Jumping";
-    bool run;
-    public bool secondJump;
+    private const string ATTACKING = "Attack";
+
+
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    Rigidbody2D rb2d;
+    private Rigidbody2D rb2d;
     private EdgeCollider2D edgeCollider2D;
     private Time currentTime;
     public float speed;
     public float runSpeed;
     public float maxSpeed;
     public float jumpVelocity;
-    public float fallMultiplier = 2.5f;
-    Vector2 movement;
+
+    bool run;
+    bool secondJump;
+    bool melee;
+
     float moveHorizontal;
+    Vector2 movement;
+
 
     [SerializeField] private LayerMask platofrmLayerMask;
 
     private Vector2 idlePosition;
-    public string previousAnimation;
+    private string previousAnimation;
 
 
 	void Start () {
@@ -35,6 +41,7 @@ public class PlayerController : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         edgeCollider2D = GetComponent<EdgeCollider2D>();
         secondJump = false;
+        melee = false;
       
 
         //gets current position which is idle
@@ -45,16 +52,28 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
         run = Input.GetKey(KeyCode.LeftShift);
-        handleMovement();
+        HandleMovement();
         HandleJumping();
+        HandleMeleeAttack();
+        UpdateAnimator();
     }
+
+    /***************************** MELEE ATTACK ******************************/
+    void HandleMeleeAttack() {
+        if (Input.GetMouseButton(0))
+        {
+            melee = true;
+        } 
+    }
+
+    void AttackEnd() {
+        melee = false;
+    }
+
     /***************************** MOVE & JUMP *******************************/
-    void handleMovement() {
+    void HandleMovement() {
         moveHorizontal = Input.GetAxis("Horizontal");
-
-
         float moveVertical = 0.0f;
-        
         movement = new Vector2(moveHorizontal, moveVertical);
 
         if (rb2d == null)
@@ -70,27 +89,18 @@ public class PlayerController : MonoBehaviour {
         }else {
             rb2d.AddForce(Vector2.right * movement * speed);
         }
-        UpdateAnimator(run);
     }
 
     private void HandleJumping()
     {
         if (Input.GetButtonDown("Jump") && (IsGrounded() || secondJump ))
         {
-            Debug.Log("JUMPING");
             if (run)
                 rb2d.AddForce(Vector2.up * (jumpVelocity + 50), ForceMode2D.Force);
             else
                 rb2d.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Force);
             secondJump = !secondJump;
-            UpdateAnimator();
         }
-        if (rb2d.velocity.y < 0)
-        {
-            rb2d.AddForce(Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
-        }
-
-
     }
 
     private bool IsGrounded()
@@ -102,12 +112,22 @@ public class PlayerController : MonoBehaviour {
 
 
     /************************************ ANIMATOR ****************************/
-    void UpdateAnimator(bool run = false) {
+    void UpdateAnimator() {
         if(animator == null) {
             print("Error in PlayerController.updateAnimator\n");
             return;
         }
 
+        //if player is attacking
+        if (melee)
+        {
+            animator.SetBool(previousAnimation, false);
+            animator.SetTrigger(ATTACKING);
+            //animator.SetBool(ATTACKING, true);
+            //previousAnimation = ATTACKING;
+            return;
+        }
+       
         //if player is in the air
         if (!IsGrounded())
         {
@@ -119,7 +139,6 @@ public class PlayerController : MonoBehaviour {
 
         //TODO: find a better way to do this, for some reason jumping stays true
         //in some cases, this is a hack to fix it
-
         if (IsGrounded() && animator.GetBool(JUMPING)) {
             animator.SetBool(JUMPING, false);
         }
@@ -130,7 +149,6 @@ public class PlayerController : MonoBehaviour {
             animator.SetBool(previousAnimation, false);
             return;
         }
-
 
         //if player is moving forward
         if (moveHorizontal > 0)
@@ -182,7 +200,5 @@ public class PlayerController : MonoBehaviour {
             animator.SetBool(WALKING, false);
             previousAnimation = WALKING;
         }
-
     }
-
 }
