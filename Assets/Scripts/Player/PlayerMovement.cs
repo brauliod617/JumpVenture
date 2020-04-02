@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour {
     public float runSpeed;
     public float maxSpeed;
     public float jumpVelocity;
+    public float runJumpBoost;
+    public float secondJumpBoost;
     bool run;
     bool secondJump;
     bool isIdle;
@@ -53,7 +55,7 @@ public class PlayerMovement : MonoBehaviour {
         playerController.rb2d.AddForce(movement);
         if (run)
         {
-            playerController.rb2d.AddForce(Vector2.right * movement * speed * runSpeed);
+            playerController.rb2d.AddForce(Vector2.right * movement * (speed + runSpeed));
         }
         else
         {
@@ -66,10 +68,29 @@ public class PlayerMovement : MonoBehaviour {
         if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump))
         {
             if (run)
-                playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + 50), ForceMode2D.Force);
-            else
-                playerController.rb2d.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Force);
+            {
+                if (secondJump)
+                {
+                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
+                }
+                else {
+                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost), ForceMode2D.Impulse);
+                }
+         }
+            else {
+                if (secondJump)
+                {
+                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
+                }
+                else
+                {
+                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity), ForceMode2D.Impulse);
+                }
+
+            }
+         
             secondJump = !secondJump;
+
         }
     }
 
