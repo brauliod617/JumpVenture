@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Life
   - Enemy
+  - gems
+  - food
   layers:
   - Default
   - TransparentFX

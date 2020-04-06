@@ -21,4 +21,19 @@ public class PlayerController : MonoBehaviour {
         Vector2.down, .05f, platofrmLayerMask);
         return raycastHit2D.collider != null;
     }
+
+    /***********************interactables***************************/
+    private void OnTriggerEnter2D(Collider2D otherObj)
+    {
+        //Debug.Log("collide");
+        if (otherObj.gameObject.CompareTag("gems"))
+        {
+            Destroy(otherObj.gameObject);
+        }
+
+        if (otherObj.gameObject.CompareTag("food"))
+        {
+            Destroy(otherObj.gameObject);
+        }
+    }
 }
