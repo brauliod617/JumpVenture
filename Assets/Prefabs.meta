@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Prefabs.meta
 guid: ca4bee770b6244e3d8ed193f1f7ae1e2
+=======
+guid: 01acadb780e2a4589ade99174f676186
+>>>>>>> master:Assets/Sprite/SunnyLand/OpenGameArt.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
