@@ -185,11 +185,16 @@ public class PlayerController : MonoBehaviour {
 
     }
 
-    /***********************GEMS***********************************************/
+    /***********************interactables***************************/
     private void OnTriggerEnter2D(Collider2D otherObj)
     {
         //Debug.Log("collide");
         if (otherObj.gameObject.CompareTag("gems"))
+        {
+            Destroy(otherObj.gameObject);
+        }
+
+        if (otherObj.gameObject.CompareTag("food"))
         {
             Destroy(otherObj.gameObject);
         }
