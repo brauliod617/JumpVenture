@@ -14,84 +14,53 @@ public class BanditController : MonoBehaviour {
 	private bool isWalking;
 
 	private Rigidbody2D rb2d;
+	private SpriteRenderer spriteRenderer;
 	private int walkDirection_int;
-	private float walkCounter;
-	private float waitCounter;
-
 
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
-		//walkCounter = walkTime;
-		//waitCounter = waitTime;
-		ChooseDirection();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		walkDirection_int = Random.Range(0, 1);
+		isWalking = true;
 
 		minWalkPoint = walkZone.bounds.min;
 		maxWalkPoint = walkZone.bounds.max;
-		Debug.Log("minWalkPoint: " + minWalkPoint);
-		Debug.Log("maxWalkPoint: " + maxWalkPoint);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		Wander();
 	}
 
-	void ChooseDirection() {
-		walkDirection_int = Random.Range(0, 1);
-		isWalking = true;
-		walkCounter = Random.Range(10, 25);
-        waitCounter = Random.Range(1, 3);
-		//Debug.Log("WaitCounter: " + waitCounter);
-		//Debug.Log("Walk Counter: " + walkCounter);
+	void Wander() {
+		switch (walkDirection_int)
+		{               
+			case 0:
+				spriteRenderer.flipX = true;
+				if (transform.position.x > maxWalkPoint.x)
+				{
+					walkDirection_int = walkDirection_int == 1 ? 0 : 1;
+					break;
+				}
+ 				rb2d.AddForce(new Vector2(moveSpeed, 0));
+				break;
+			case 1:
+				spriteRenderer.flipX = false;
+				if (transform.position.x < minWalkPoint.x)
+				{
+					walkDirection_int = walkDirection_int == 1 ? 0 : 1;
+					break;
+				}
+				rb2d.AddForce(new Vector2(-moveSpeed, 0));
+				break;
+		}
     }
 
-	void Wander() {
-		if (isWalking)
-		{
-			Debug.Log("walk Direction: " + walkDirection_int);
-			switch (walkDirection_int)
-			{               
-				case 0:
-					if (transform.position.x > maxWalkPoint.x)
-					{
-						Debug.Log("passed max +x");
-						walkDirection_int = walkDirection_int == 1? 0: 1;
-						break;
-					}
-					Debug.Log("Move right");
-					rb2d.AddForce(new Vector2(moveSpeed, 0));
-					break;
-				case 1:
-					if (transform.position.x < minWalkPoint.x)
-					{
-						Debug.Log("passed min x");
-						walkDirection_int = walkDirection_int == 1 ? 0 : 1;
-                        
-						break;
-					}
-					Debug.Log("Move left");
-					rb2d.AddForce(new Vector2(-moveSpeed, 0));
-					break;
-			}
-			//walkCounter -= Time.deltaTime;
-			//Debug.Log("walkCounter -= Time.deltaTime: " + (walkCounter -= Time.deltaTime));
-			//if (walkCounter <= 0)
-			//{
-			//	isWalking = false;
-			//	//walkCounter = walkTime;
-			//}
-
-		}
-		else {
-			//waitCounter -= Time.deltaTime;
-			//Debug.Log("waitCounter -= Time.deltaTime: " + (waitCounter -= Time.deltaTime));
-			//rb2d.velocity = Vector2.zero;
-			//if (waitCounter < 0) {
-			//	ChooseDirection();
-			//	//walkCounter = waitTime;
-   //         }
-        }
-        
+	public int GetDirection() {
+		return walkDirection_int;
+    }
+	public bool GetIsWalking() {
+		return isWalking;
     }
 }
