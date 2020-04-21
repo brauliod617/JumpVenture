@@ -10,6 +10,7 @@ TagManager:
   - food
   - HeavyBandit
   - LightBandit
+  - item
   layers:
   - Default
   - TransparentFX

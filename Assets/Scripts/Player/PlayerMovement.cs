@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour {
     public float runJumpBoost;
     public float secondJumpBoost;
     bool run;
+    bool improvedJump;
     bool secondJump;
     bool isIdle;
     bool isDead;
@@ -41,9 +42,20 @@ public class PlayerMovement : MonoBehaviour {
         run = Input.GetKey(KeyCode.LeftShift);
         HandleMovement();
         HandleJumping();
+        if (playerController.IsGrounded() && improvedJump)
+        {
+            secondJump = true;
+        }
         isIdle = (movement == idlePosition);
 	}
-
+    public void UpgradeJumpFactor(int jumpFactor)
+    {
+        jumpVelocity = jumpVelocity * 1.2f;
+    }
+    public void UpgradeDoubleJump(bool doublejump)
+    {
+        improvedJump = doublejump;
+    }
     void HandleMovement()
     {
         moveHorizontal = Input.GetAxis("Horizontal");
@@ -77,6 +89,7 @@ public class PlayerMovement : MonoBehaviour {
             {
                 if (secondJump)
                 {
+                    secondJump = false;
                     playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
                 }
                 else {
@@ -86,6 +99,7 @@ public class PlayerMovement : MonoBehaviour {
             else {
                 if (secondJump)
                 {
+                    secondJump = false;
                     playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
                 }
                 else
@@ -94,8 +108,8 @@ public class PlayerMovement : MonoBehaviour {
                 }
 
             }
-         
-            secondJump = !secondJump;
+                
+            
 
         }
     }

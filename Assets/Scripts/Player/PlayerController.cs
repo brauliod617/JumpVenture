@@ -37,5 +37,13 @@ public class PlayerController : MonoBehaviour {
         {
             Destroy(otherObj.gameObject);
         }
+        if (otherObj.gameObject.CompareTag("item"))
+        {
+            //ItemWorld itemWorld = edgeCollider2D.GetComponent<itemWorld>();
+            //Inventory inventory = this.GetComponent<inventory>().GetInventory();
+            //inventory.AddItem(itemWorld.GetItem());
+            //itemWorld.DestroySelf();
+            Destroy(otherObj.gameObject);
+        }
     }
 }

@@ -4,12 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour {
+    public Inventory inventory;
+    [SerializeField] private UI_Inventory uiInventory;
 
     public float totalHealth;
     public float currentHealth;
     public float healthLevel;
     public float meleeAttackDamage;
     public Slider slider;
+
+    public float jumpHeight;
+    public bool doubleJump = false;
 
     [SerializeField] private LayerMask lavaLayerMask;
 
@@ -23,8 +28,18 @@ public class PlayerStats : MonoBehaviour {
         animatorController = GetComponent<AnimatorController>();
         playerMovement = GetComponent<PlayerMovement>();
         edgeCollider2D = GetComponent<EdgeCollider2D>();
+
+        inventory = new Inventory();
+        uiInventory.SetInventory(inventory);
+
+        //ItemWorld.SpawnItemWorld(new Vector3(0, 0), new Item { itemType = Item.ItemType.armor, amount = 1 });
     }
 
+   
+    public void AddItem(Item newItem)
+    {
+        inventory.AddItem(newItem);
+    }
     public void Update()
     {
         if (IsOnLava()) {
@@ -32,6 +47,8 @@ public class PlayerStats : MonoBehaviour {
             currentHealth -= 40 * Time.deltaTime;
             UpdateHealthSlider();
         }
+
+
     }
 
     public float GetMeleeAttackDamage() {
@@ -54,8 +71,20 @@ public class PlayerStats : MonoBehaviour {
 
     public void Heal(float healValue) {
         currentHealth += healValue;
-        if (currentHealth > 100)
-            currentHealth = 100;
+        if (currentHealth > totalHealth)
+            currentHealth = totalHealth;
+    }
+    public void UpdateStats(int extraHp,int extraDamage,int jumpFactor,bool extraJump)
+    {
+        totalHealth = totalHealth + extraHp;
+        currentHealth = currentHealth + extraHp;
+        meleeAttackDamage = meleeAttackDamage + extraDamage;
+        playerMovement.UpgradeJumpFactor(jumpFactor);
+        if (!doubleJump){
+            playerMovement.UpgradeDoubleJump(extraJump);
+            doubleJump = extraJump;
+        }
+        // Debug.Log(totalHealth);
     }
 
     public void UpdateHealthSlider()
