@@ -40,17 +40,7 @@ public class hpManager : MonoBehaviour
         }
         setHealth();
     }
-    public void hpDecrease(int damage)
-    {
-        if (hp - damage <= 0)
-        {
-            //death
-        }
-        else
-        {
-            hp -= damage;
-            Debug.Log("hp:" + hp);
-        }
-        setHealth();
-    }
+
+
+
 }

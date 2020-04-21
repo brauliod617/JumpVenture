@@ -19,19 +19,24 @@ public class PlayerMovement : MonoBehaviour {
     bool run;
     bool secondJump;
     bool isIdle;
+    bool isDead;
 
     // Use this for initialization
     void Start () {
         playerController = GetComponent<PlayerController>();
         animatorController = GetComponent<AnimatorController>();
         secondJump = false;
-
+        isDead = false;
+        
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if (isDead)
+            return;
+
         run = Input.GetKey(KeyCode.LeftShift);
         HandleMovement();
         HandleJumping();
@@ -104,5 +109,9 @@ public class PlayerMovement : MonoBehaviour {
 
     public bool GetRun() {
         return run;
+    }
+
+    public void Die() {
+        isDead = true;
     }
 }
