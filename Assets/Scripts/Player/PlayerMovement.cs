@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour {
 
     AnimatorController animatorController;
     PlayerController playerController;
-
+    PlayerStats playerStats;
     float moveHorizontal;
     Vector2 movement;
     Vector2 idlePosition;
@@ -27,7 +27,8 @@ public class PlayerMovement : MonoBehaviour {
         animatorController = GetComponent<AnimatorController>();
         secondJump = false;
         isDead = false;
-        
+        playerStats = GetComponent<PlayerStats>();
+
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
@@ -70,7 +71,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump))
+        if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump || playerStats.IsOnLava()))
         {
             if (run)
             {

@@ -10,9 +10,11 @@ public class PlayerController : MonoBehaviour {
     public Rigidbody2D rb2d;
     [SerializeField] private LayerMask platofrmLayerMask;
 
+
     void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         edgeCollider2D = GetComponent<EdgeCollider2D>();
+
 	}
 
     public bool IsGrounded()

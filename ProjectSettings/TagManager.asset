@@ -9,6 +9,7 @@ TagManager:
   - gems
   - food
   - HeavyBandit
+  - LightBandit
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Level
   - Character
   - Bandits
-  - 
+  - Lava
   - 
   - 
   - 

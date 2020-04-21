@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 212154131918301670}
   - component: {fileID: 58638128338775658}
   - component: {fileID: 114148873661446406}
-  - component: {fileID: 114369395576611768}
   m_Layer: 8
   m_Name: cherry-1
   m_TagString: food
@@ -70,18 +69,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healValue: 10
---- !u!114 &114369395576611768
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1461474730639782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d3823f7b49e878468c0c8fbb583a263, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 0}
 --- !u!212 &212154131918301670
 SpriteRenderer:
   m_ObjectHideFlags: 1

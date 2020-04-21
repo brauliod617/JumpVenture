@@ -17,6 +17,7 @@ public class AnimatorController : MonoBehaviour {
     private PlayerController playerController;
     private PlayerAttack playerAttack;
     private PlayerMovement playerMovement;
+    private PlayerStats playerStats;
 
     bool melee;
     bool run;
@@ -32,6 +33,8 @@ public class AnimatorController : MonoBehaviour {
         playerController = GetComponent<PlayerController>();
         playerAttack = GetComponent<PlayerAttack>();
         playerMovement = GetComponent<PlayerMovement>();
+        playerStats = GetComponent<PlayerStats>();
+        
     }
 	
 	// Update is called once per frame
@@ -48,7 +51,6 @@ public class AnimatorController : MonoBehaviour {
     /************************************ ANIMATOR ****************************/
     public void Die() {
         animator.SetBool(previousAnimation, false);
-        //animator.SetBool(DIEING, true);
         animator.SetTrigger("Die");
         isDead = true;
     }
@@ -72,12 +74,15 @@ public class AnimatorController : MonoBehaviour {
         }
 
         //if player is in the air
-        if (!playerController.IsGrounded())
+        if ((!playerController.IsGrounded()))
         {
-            animator.SetBool(previousAnimation, false);
-            animator.SetBool(JUMPING, true);
-            previousAnimation = JUMPING;
-            return;
+            if (!playerStats.IsOnLava())
+            {
+                animator.SetBool(previousAnimation, false);
+                animator.SetBool(JUMPING, true);
+                previousAnimation = JUMPING;
+                return;
+            }
         }
 
         //TODO: find a better way to do this, for some reason jumping stays true
