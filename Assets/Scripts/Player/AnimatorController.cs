@@ -9,6 +9,7 @@ public class AnimatorController : MonoBehaviour {
     private const string CROUCHING = "Crouching";
     private const string JUMPING = "Jumping";
     private const string ATTACKING = "Attack";
+    private const string DIEING = "Dieing";
 
     private Animator animator;
     private string previousAnimation;
@@ -16,10 +17,12 @@ public class AnimatorController : MonoBehaviour {
     private PlayerController playerController;
     private PlayerAttack playerAttack;
     private PlayerMovement playerMovement;
+    private PlayerStats playerStats;
 
     bool melee;
     bool run;
     bool isIdle;
+    bool isDead;
 
     float moveHorizontal;
 
@@ -30,10 +33,14 @@ public class AnimatorController : MonoBehaviour {
         playerController = GetComponent<PlayerController>();
         playerAttack = GetComponent<PlayerAttack>();
         playerMovement = GetComponent<PlayerMovement>();
+        playerStats = GetComponent<PlayerStats>();
+        
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if (isDead)
+            return;
         melee = playerAttack.GetMelee();
         run = playerMovement.GetRun();
         isIdle = playerMovement.GetIsIdle();
@@ -42,6 +49,13 @@ public class AnimatorController : MonoBehaviour {
 	}
 
     /************************************ ANIMATOR ****************************/
+    public void Die() {
+        animator.SetBool(previousAnimation, false);
+        animator.SetTrigger("Die");
+        isDead = true;
+    }
+
+
     private void UpdateAnimator()
     {
         if (animator == null)
@@ -60,12 +74,15 @@ public class AnimatorController : MonoBehaviour {
         }
 
         //if player is in the air
-        if (!playerController.IsGrounded())
+        if ((!playerController.IsGrounded()))
         {
-            animator.SetBool(previousAnimation, false);
-            animator.SetBool(JUMPING, true);
-            previousAnimation = JUMPING;
-            return;
+            if (!playerStats.IsOnLava())
+            {
+                animator.SetBool(previousAnimation, false);
+                animator.SetBool(JUMPING, true);
+                previousAnimation = JUMPING;
+                return;
+            }
         }
 
         //TODO: find a better way to do this, for some reason jumping stays true

@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour {
 
     AnimatorController animatorController;
     PlayerController playerController;
-
+    PlayerStats playerStats;
     float moveHorizontal;
     Vector2 movement;
     Vector2 idlePosition;
@@ -19,12 +19,15 @@ public class PlayerMovement : MonoBehaviour {
     bool run;
     bool secondJump;
     bool isIdle;
+    bool isDead;
 
     // Use this for initialization
     void Start () {
         playerController = GetComponent<PlayerController>();
         animatorController = GetComponent<AnimatorController>();
         secondJump = false;
+        isDead = false;
+        playerStats = GetComponent<PlayerStats>();
 
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -32,6 +35,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if (isDead)
+            return;
+
         run = Input.GetKey(KeyCode.LeftShift);
         HandleMovement();
         HandleJumping();
@@ -65,7 +71,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump))
+        if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump || playerStats.IsOnLava()))
         {
             if (run)
             {
@@ -104,5 +110,9 @@ public class PlayerMovement : MonoBehaviour {
 
     public bool GetRun() {
         return run;
+    }
+
+    public void Die() {
+        isDead = true;
     }
 }
