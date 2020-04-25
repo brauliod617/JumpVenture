@@ -23,6 +23,8 @@ public class PlayerAttack : MonoBehaviour {
     {
         if (attackButton.IsPressed) {
             melee = true;
+        } else if (Input.GetButtonDown("Fire1")){
+            melee = true;
         }
         
     }

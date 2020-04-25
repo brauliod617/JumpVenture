@@ -56,12 +56,12 @@ public class PlayerMovement : MonoBehaviour {
             jumps = maxJumps;
         }
 
-        if (jumpButton.IsPressed)
+        if (jumpButton.IsPressed || Input.GetButtonDown("Jump"))
         {
             HandleJumping();
             jumpButton.IsPressed = false;
         }
-        else if (leftButton.IsPressed)
+        else if (leftButton.IsPressed )
         {
             moveHorizontal = -1;
         }
@@ -71,7 +71,8 @@ public class PlayerMovement : MonoBehaviour {
         }
         else
         {
-            moveHorizontal = 0;
+            moveHorizontal = Input.GetAxis("Horizontal");
+            //moveHorizontal = 0;
         }
 
 
@@ -92,7 +93,7 @@ public class PlayerMovement : MonoBehaviour {
             runBoost = (speed + runSpeed);
             Debug.Log("RUN");
         }
-        else if (!runButton.IsPressed)
+        else if (!runButton.IsPressed || Input.GetKey(KeyCode.LeftShift))
         {
             runBoost = speed;
             run = false;

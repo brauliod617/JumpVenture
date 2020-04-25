@@ -56,6 +56,7 @@ public class PlayerStats : MonoBehaviour {
         currentHealth += healValue;
         if (currentHealth > 100)
             currentHealth = 100;
+        UpdateHealthSlider();
     }
 
     public void UpdateHealthSlider()
