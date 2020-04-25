@@ -6,6 +6,7 @@ public class PlayerAttack : MonoBehaviour {
 
 	PlayerController playerController;
 	PlayerStats playerStats;
+    public ButtonManager attackButton;
 
     bool melee;
 
@@ -20,18 +21,14 @@ public class PlayerAttack : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        //HandleMeleeAttack();
+        if (attackButton.IsPressed) {
+            melee = true;
+        }
+        
     }
 
 
     /***************************** MELEE ATTACK ******************************/
-    void HandleMeleeAttack()
-    {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            melee = true;
-        }
-    }
 
     void AttackEnd()
     {

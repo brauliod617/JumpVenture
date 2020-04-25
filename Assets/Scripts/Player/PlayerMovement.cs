@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour {
     public float jumpVelocity;
     public float runJumpBoost;
     public float secondJumpBoost;
+    float runBoost;
     bool run;
     bool secondJump;
     bool isIdle;
@@ -47,6 +48,8 @@ public class PlayerMovement : MonoBehaviour {
 	void FixedUpdate () {
         if (isDead)
             return;
+
+
 
         if (playerController.IsGrounded())
         {
@@ -83,6 +86,18 @@ public class PlayerMovement : MonoBehaviour {
         float moveVertical = 0.0f;
         movement = new Vector2(moveHorizontal, moveVertical);
 
+        if (runButton.IsPressed)
+        {
+            run = true;
+            runBoost = (speed + runSpeed);
+            Debug.Log("RUN");
+        }
+        else if (!runButton.IsPressed)
+        {
+            runBoost = speed;
+            run = false;
+        }
+
         if (playerController.rb2d == null)
             return;
 
@@ -90,16 +105,9 @@ public class PlayerMovement : MonoBehaviour {
         {
             return;
         }
-        //move player character
-        playerController.rb2d.AddForce(movement);
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            playerController.rb2d.AddForce(Vector2.right * movement * (speed + runSpeed));
-        }
-        else
-        {
-            playerController.rb2d.AddForce(Vector2.right * movement * speed);
-        }
+ 
+        playerController.rb2d.AddForce(Vector2.right * movement * runBoost);
+
     }
 
     private void HandleJumping()
@@ -128,7 +136,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public bool GetRun() {
-        return Input.GetKey(KeyCode.LeftShift);
+        return run;
     }
 
     public void Die() {
