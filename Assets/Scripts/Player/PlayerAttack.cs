@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        HandleMeleeAttack();
+        //HandleMeleeAttack();
     }
 
 

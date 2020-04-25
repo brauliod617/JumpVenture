@@ -1,8 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
+
+    public ButtonManager leftButton;
+    public ButtonManager rightButton;
+    public ButtonManager jumpButton;
+    public ButtonManager runButton;
 
     AnimatorController animatorController;
     PlayerController playerController;
@@ -32,7 +38,7 @@ public class PlayerMovement : MonoBehaviour {
         playerStats = GetComponent<PlayerStats>();
         maxJumps = 2;
         jumps = maxJumps;
-        Debug.Log("t4st");
+
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
@@ -46,14 +52,34 @@ public class PlayerMovement : MonoBehaviour {
         {
             jumps = maxJumps;
         }
-        HandleJumping();
+
+        if (jumpButton.IsPressed)
+        {
+            HandleJumping();
+            jumpButton.IsPressed = false;
+        }
+        else if (leftButton.IsPressed)
+        {
+            moveHorizontal = -1;
+        }
+        else if (rightButton.IsPressed)
+        {
+            moveHorizontal = 1;
+        }
+        else
+        {
+            moveHorizontal = 0;
+        }
+
+
+        //HandleJumping();
         HandleMovement();
         isIdle = (movement == idlePosition);
 	}
 
     void HandleMovement()
     {
-        moveHorizontal = Input.GetAxis("Horizontal");
+        //moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = 0.0f;
         movement = new Vector2(moveHorizontal, moveVertical);
 
@@ -78,13 +104,11 @@ public class PlayerMovement : MonoBehaviour {
 
     private void HandleJumping()
     {
-        if (( Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Keypad0) ) && (playerController.IsGrounded() || ( jumps > 0 ) || playerStats.IsOnLava()) )
+        if ((playerController.IsGrounded() || ( jumps > 0 ) || playerStats.IsOnLava())) //( Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Keypad0) ) && 
         {
-            Debug.Log("Jump Pressed");
-            Debug.Log("secondJump: "+ secondJump);
+            Debug.Log("JUMP");
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                Debug.Log("RUN JUMP");
                 playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
             }
             else {
