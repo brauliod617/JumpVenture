@@ -16,6 +16,7 @@ public class scoreManager : MonoBehaviour {
     public void changeScore(int gemValue)
     {
         score += gemValue;
+        Debug.Log(text);
         text.text = "x" + score.ToString();
     }
 }

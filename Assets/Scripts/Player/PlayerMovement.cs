@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour {
     bool secondJump;
     bool isIdle;
     bool isDead;
+    int jumps;
+    int maxJumps;
 
     // Use this for initialization
     void Start () {
@@ -28,7 +30,9 @@ public class PlayerMovement : MonoBehaviour {
         secondJump = false;
         isDead = false;
         playerStats = GetComponent<PlayerStats>();
-
+        maxJumps = 2;
+        jumps = maxJumps;
+        Debug.Log("t4st");
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
@@ -38,9 +42,12 @@ public class PlayerMovement : MonoBehaviour {
         if (isDead)
             return;
 
-        run = Input.GetKey(KeyCode.LeftShift);
-        HandleMovement();
+        if (playerController.IsGrounded())
+        {
+            jumps = maxJumps;
+        }
         HandleJumping();
+        HandleMovement();
         isIdle = (movement == idlePosition);
 	}
 
@@ -59,7 +66,7 @@ public class PlayerMovement : MonoBehaviour {
         }
         //move player character
         playerController.rb2d.AddForce(movement);
-        if (run)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             playerController.rb2d.AddForce(Vector2.right * movement * (speed + runSpeed));
         }
@@ -71,33 +78,21 @@ public class PlayerMovement : MonoBehaviour {
 
     private void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump || playerStats.IsOnLava()))
+        if (( Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Keypad0) ) && (playerController.IsGrounded() || ( jumps > 0 ) || playerStats.IsOnLava()) )
         {
-            if (run)
+            Debug.Log("Jump Pressed");
+            Debug.Log("secondJump: "+ secondJump);
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (secondJump)
-                {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
-                }
-                else {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost), ForceMode2D.Impulse);
-                }
-         }
-            else {
-                if (secondJump)
-                {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
-                }
-                else
-                {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity), ForceMode2D.Impulse);
-                }
-
+                Debug.Log("RUN JUMP");
+                playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
             }
-         
-            secondJump = !secondJump;
-
+            else {
+                playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
+            }
+            jumps--;
         }
+
     }
 
     public float GetMoveHorizontal() {
@@ -109,10 +104,15 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public bool GetRun() {
-        return run;
+        return Input.GetKey(KeyCode.LeftShift);
     }
 
     public void Die() {
         isDead = true;
     }
+
+    public void ResetJump() {
+        jumps = maxJumps;
+    }
+    
 }
