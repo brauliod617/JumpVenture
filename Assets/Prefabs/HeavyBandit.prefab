@@ -145,7 +145,7 @@ MonoBehaviour:
   moveSpeed: 5
   walkZone: {fileID: 0}
   attackSpeed: 2
-  banditDamage: 3
+  banditDamage: 5
   maxWalkSpeed: 1
 --- !u!68 &68828416402971506
 EdgeCollider2D:

@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour {
             jumps = maxJumps;
         }
 
-        if (jumpButton.IsPressed || Input.GetButtonDown("Jump"))
+        if (jumpButton.IsPressed)
         {
             HandleJumping();
             jumpButton.IsPressed = false;
@@ -91,9 +91,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             run = true;
             runBoost = (speed + runSpeed);
-            Debug.Log("RUN");
         }
-        else if (!runButton.IsPressed || Input.GetKey(KeyCode.LeftShift))
+        else if (!runButton.IsPressed)
         {
             runBoost = speed;
             run = false;
@@ -115,17 +114,9 @@ public class PlayerMovement : MonoBehaviour {
     {
         if ((playerController.IsGrounded() || ( jumps > 0 ) || playerStats.IsOnLava())) //( Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Keypad0) ) && 
         {
-            Debug.Log("JUMP");
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
-            }
-            else {
-                playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
-            }
+            playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
             jumps--;
         }
-
     }
 
     public float GetMoveHorizontal() {

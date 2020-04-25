@@ -217,7 +217,7 @@ MonoBehaviour:
   moveSpeed: 5
   walkZone: {fileID: 0}
   attackSpeed: 2
-  banditDamage: 1
+  banditDamage: 3
   maxWalkSpeed: 1
 --- !u!114 &114596691376262824
 MonoBehaviour:
