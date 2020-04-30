@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PlayerStats : MonoBehaviour {
 
     public float totalHealth;
-    public float currentHealth;
-    public float healthLevel;
+    static public float currentHealth;
     public float meleeAttackDamage;
     public Slider slider;
 
@@ -19,7 +19,7 @@ public class PlayerStats : MonoBehaviour {
 
     public void Start()
     {
-        currentHealth = totalHealth * healthLevel;
+        UpdateHealthSlider();
         animatorController = GetComponent<AnimatorController>();
         playerMovement = GetComponent<PlayerMovement>();
         edgeCollider2D = GetComponent<EdgeCollider2D>();
@@ -28,7 +28,6 @@ public class PlayerStats : MonoBehaviour {
     public void Update()
     {
         if (IsOnLava()) {
-            Debug.Log("Buring");
             currentHealth -= 40 * Time.deltaTime;
             UpdateHealthSlider();
         }
@@ -48,14 +47,17 @@ public class PlayerStats : MonoBehaviour {
             {
                 animatorController.Die();
                 playerMovement.Die();
+         
+
+          
             }
         }
     }
 
     public void Heal(float healValue) {
         currentHealth += healValue;
-        if (currentHealth > 100)
-            currentHealth = 100;
+        if (currentHealth > totalHealth)
+            currentHealth = totalHealth;
         UpdateHealthSlider();
     }
 

@@ -24,7 +24,7 @@ public class Level3House : MonoBehaviour
     {
         other.GetComponent<PlayerMovement>().Die();
 
-        Debug.Log("LoadingScne");
+        Debug.Log("LoadingScene");
         SceneManager.LoadScene("END");
     }
 

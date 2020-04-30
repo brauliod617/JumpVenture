@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AnimatorController : MonoBehaviour {
 
@@ -40,7 +41,12 @@ public class AnimatorController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
         if (isDead)
+        {
+            Debug.Log("LoadingScne");
+            GetComponent<scoreManager>().onDeath();
+            SceneManager.LoadScene("Level1");
             return;
+        }
         melee = playerAttack.GetMelee();
         run = playerMovement.GetRun();
         isIdle = playerMovement.GetIsIdle();
@@ -53,6 +59,7 @@ public class AnimatorController : MonoBehaviour {
         animator.SetBool(previousAnimation, false);
         animator.SetTrigger("Die");
         isDead = true;
+     
     }
 
 
@@ -61,6 +68,7 @@ public class AnimatorController : MonoBehaviour {
         if (animator == null)
         {
             print("Error in PlayerController updateAnimator\n");
+
             return;
         }
         //if player is attacking
