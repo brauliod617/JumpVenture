@@ -1,0 +1,4 @@
+#Thu Apr 30 23:01:13 EDT 2020
+base.0=/Users/Braulio/Programming/Unity/JumpVentureAndroidStudio/launcher/build/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex
