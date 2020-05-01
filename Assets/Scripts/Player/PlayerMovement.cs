@@ -1,8 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
+
+    public ButtonManager leftButton;
+    public ButtonManager rightButton;
+    public ButtonManager jumpButton;
+    public ButtonManager runButton;
 
     AnimatorController animatorController;
     PlayerController playerController;
@@ -16,10 +22,13 @@ public class PlayerMovement : MonoBehaviour {
     public float jumpVelocity;
     public float runJumpBoost;
     public float secondJumpBoost;
+    float runBoost;
     bool run;
     bool secondJump;
     bool isIdle;
     bool isDead;
+    int jumps;
+    int maxJumps;
 
     // Use this for initialization
     void Start () {
@@ -28,6 +37,8 @@ public class PlayerMovement : MonoBehaviour {
         secondJump = false;
         isDead = false;
         playerStats = GetComponent<PlayerStats>();
+        maxJumps = 2;
+        jumps = maxJumps;
 
         //gets current position which is idle
         idlePosition = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -38,17 +49,54 @@ public class PlayerMovement : MonoBehaviour {
         if (isDead)
             return;
 
-        run = Input.GetKey(KeyCode.LeftShift);
+
+
+        if (playerController.IsGrounded())
+        {
+            jumps = maxJumps;
+        }
+
+        if (jumpButton.IsPressed)
+        {
+            HandleJumping();
+            jumpButton.IsPressed = false;
+        }
+        else if (leftButton.IsPressed )
+        {
+            moveHorizontal = -1;
+        }
+        else if (rightButton.IsPressed)
+        {
+            moveHorizontal = 1;
+        }
+        else
+        {
+            moveHorizontal = Input.GetAxis("Horizontal");
+            //moveHorizontal = 0;
+        }
+
+
+        //HandleJumping();
         HandleMovement();
-        HandleJumping();
         isIdle = (movement == idlePosition);
 	}
 
     void HandleMovement()
     {
-        moveHorizontal = Input.GetAxis("Horizontal");
+        //moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = 0.0f;
         movement = new Vector2(moveHorizontal, moveVertical);
+
+        if (runButton.IsPressed)
+        {
+            run = true;
+            runBoost = (speed + runSpeed);
+        }
+        else if (!runButton.IsPressed)
+        {
+            runBoost = speed;
+            run = false;
+        }
 
         if (playerController.rb2d == null)
             return;
@@ -57,46 +105,17 @@ public class PlayerMovement : MonoBehaviour {
         {
             return;
         }
-        //move player character
-        playerController.rb2d.AddForce(movement);
-        if (run)
-        {
-            playerController.rb2d.AddForce(Vector2.right * movement * (speed + runSpeed));
-        }
-        else
-        {
-            playerController.rb2d.AddForce(Vector2.right * movement * speed);
-        }
+ 
+        playerController.rb2d.AddForce(Vector2.right * movement * runBoost);
+
     }
 
     private void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && (playerController.IsGrounded() || secondJump || playerStats.IsOnLava()))
+        if ((playerController.IsGrounded() || ( jumps > 0 ) || playerStats.IsOnLava())) //( Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Keypad0) ) && 
         {
-            if (run)
-            {
-                if (secondJump)
-                {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost + secondJumpBoost), ForceMode2D.Impulse);
-                }
-                else {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + runJumpBoost), ForceMode2D.Impulse);
-                }
-         }
-            else {
-                if (secondJump)
-                {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
-                }
-                else
-                {
-                    playerController.rb2d.AddForce(Vector2.up * (jumpVelocity), ForceMode2D.Impulse);
-                }
-
-            }
-         
-            secondJump = !secondJump;
-
+            playerController.rb2d.AddForce(Vector2.up * (jumpVelocity + secondJumpBoost), ForceMode2D.Impulse);
+            jumps--;
         }
     }
 
@@ -115,4 +134,9 @@ public class PlayerMovement : MonoBehaviour {
     public void Die() {
         isDead = true;
     }
+
+    public void ResetJump() {
+        jumps = maxJumps;
+    }
+    
 }

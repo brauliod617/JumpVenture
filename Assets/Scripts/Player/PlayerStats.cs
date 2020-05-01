@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PlayerStats : MonoBehaviour {
 
     public float totalHealth;
-    public float currentHealth;
-    public float healthLevel;
+    static public float currentHealth = 100;
     public float meleeAttackDamage;
     public Slider slider;
 
@@ -19,16 +19,16 @@ public class PlayerStats : MonoBehaviour {
 
     public void Start()
     {
-        currentHealth = totalHealth * healthLevel;
+        UpdateHealthSlider();
         animatorController = GetComponent<AnimatorController>();
         playerMovement = GetComponent<PlayerMovement>();
         edgeCollider2D = GetComponent<EdgeCollider2D>();
+        currentHealth = 100;
     }
 
     public void Update()
     {
         if (IsOnLava()) {
-            Debug.Log("Buring");
             currentHealth -= 40 * Time.deltaTime;
             UpdateHealthSlider();
         }
@@ -47,25 +47,31 @@ public class PlayerStats : MonoBehaviour {
             if (currentHealth <= 0)
             {
                 animatorController.Die();
-                playerMovement.Die();
+                playerMovement.Die();   
             }
         }
     }
 
     public void Heal(float healValue) {
         currentHealth += healValue;
-        if (currentHealth > 100)
-            currentHealth = 100;
+        if (currentHealth > totalHealth)
+            currentHealth = totalHealth;
+        UpdateHealthSlider();
     }
 
     public void UpdateHealthSlider()
     {
+        Debug.Log(currentHealth);
+        Debug.Log(totalHealth);
+        Debug.Log(currentHealth / totalHealth);
         slider.value = currentHealth / totalHealth;
     }
 
     public bool IsOnLava() {
+
         RaycastHit2D raycastHit2D = Physics2D.BoxCast(edgeCollider2D.bounds.center, edgeCollider2D.bounds.size, 0f,
         Vector2.down, .05f, lavaLayerMask);
+        Debug.Log(raycastHit2D.collider != null);
         return raycastHit2D.collider != null;
     }
 
